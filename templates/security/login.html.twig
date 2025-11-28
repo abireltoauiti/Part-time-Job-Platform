@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    <style>
+        .login-container {
+            max-width: 420px;
+            margin: 70px auto;
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            margin-bottom: 15px;
+            padding: 12px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+        }
+
+        .remember-container {
+            margin-bottom: 20px;
+        }
+    </style>
+
+    <div class="login-container">
+
+        {% if error %}
+            <div class="alert alert-danger text-center">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+
+        <h2 class="login-title">Sign in</h2>
+
+        <form method="post">
+
+            <label for="inputEmail">Email</label>
+            <input type="email"
+                   value="{{ last_username }}"
+                   name="email"
+                   id="inputEmail"
+                   class="form-control"
+                   autocomplete="email"
+                   required autofocus>
+
+            <label for="inputPassword">Password</label>
+            <input type="password"
+                   name="password"
+                   id="inputPassword"
+                   class="form-control"
+                   autocomplete="current-password"
+                   required>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <div class="remember-container">
+                <label>
+                    <input type="checkbox" name="_remember_me">
+                    Remember me
+                </label>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Login</button>
+
+        </form>
+
+    </div>
+{% endblock %}

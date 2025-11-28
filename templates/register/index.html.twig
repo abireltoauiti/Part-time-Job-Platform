@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background:#f5f7fa;">
+        <div class="card shadow p-4" style="width: 420px; border-radius: 12px;">
+
+            <h2 class="text-center mb-4" style="font-weight:600;">Créer un compte</h2>
+
+            {{ form_start(registrationForm) }}
+
+            <div class="mb-3">
+                {{ form_label(registrationForm.email) }}
+                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(registrationForm.email) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(registrationForm.nom) }}
+                {{ form_widget(registrationForm.nom, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(registrationForm.nom) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(registrationForm.profil) }}
+                {{ form_widget(registrationForm.profil, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(registrationForm.profil) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(registrationForm.plainPassword) }}
+                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(registrationForm.plainPassword) }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-2" style="border-radius:8px;">
+                S’inscrire
+            </button>
+
+            {{ form_end(registrationForm) }}
+
+            <div class="text-center mt-3">
+                <small>Déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a></small>
+            </div>
+        </div>
+    </div>
+{% endblock %}
