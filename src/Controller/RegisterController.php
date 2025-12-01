@@ -35,8 +35,19 @@ final class RegisterController extends AbstractController
             $plainPassword = $form->get('plainPassword')->getData();
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
 
-            // Définir le rôle par défaut
-            $user->setRoles(['ROLE_USER']);
+            // Déterminer le rôle selon le type sélectionné
+            $type = $form->get('type')->getData();
+
+            switch ($type) {
+                case 'candidat':
+                    $user->setRoles(['ROLE_CANDIDAT']);
+                    break;
+                case 'entreprise':
+                    $user->setRoles(['ROLE_ENTREPRISE']);
+                    break;
+                default:
+                    $user->setRoles(['ROLE_USER']);
+            }
 
             // Persister en base
             $entityManager = $doctrine->getManager();

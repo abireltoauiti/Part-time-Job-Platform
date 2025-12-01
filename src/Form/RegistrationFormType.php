@@ -4,22 +4,35 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
+            ->add('email', EmailType::class)
             ->add('nom')
-            ->add('profil')
-            ->add('plainPassword', PasswordType::class, [
-                'mapped' => false, // pas lié à l'entité directement
-                'label' => 'Mot de passe',
-                'attr' => ['autocomplete' => 'new-password'],
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'first_options'  => ['label' => 'Mot de passe'],
+                'second_options' => ['label' => 'Confirmer le mot de passe'],
+                'mapped' => false,
+            ])
+            ->add('type', ChoiceType::class, [
+                'label' => 'Vous êtes',
+                'choices' => [
+                    'Candidat' => 'candidat',
+                    'Entreprise' => 'entreprise',
+                ],
+                'expanded' => true, // radio buttons
+                'multiple' => false,
+                'mapped' => false, // ce champ ne correspond pas directement à la propriété User
             ]);
     }
 
