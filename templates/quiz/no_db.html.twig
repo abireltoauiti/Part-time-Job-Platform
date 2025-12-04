@@ -1,0 +1,10 @@
+{# templates/quiz/no_db.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Quiz non disponible{% endblock %}
+
+{% block body %}
+    <h1>Quiz non disponible</h1>
+    <p>Le quiz demandé n'a pas été trouvé en base de données. Pour tester rapidement sans base, utilisez le quiz de démonstration :</p>
+    <p><a href="{{ path('quiz_demo') }}">Lancer le quiz de démonstration</a></p>
+{% endblock %}

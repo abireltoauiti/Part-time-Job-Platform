@@ -1,0 +1,29 @@
+{# templates/quiz/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ quiz.title }}{% endblock %}
+
+{% block body %}
+    <h1>{{ quiz.title }}</h1>
+
+    {% if submitted %}
+        <p>Votre score: <strong>{{ score }}</strong> / {{ quiz.questions|length }}</p>
+        <p><a href="{{ path('quiz_demo') }}">Rejouer</a></p>
+    {% else %}
+        <form method="post">
+            {% for question in quiz.questions %}
+                <div style="margin-bottom:1rem;">
+                    <p><strong>{{ loop.index }}. {{ question.question }}</strong></p>
+                    {% for opt in question.options %}
+                        <label>
+                            <input type="radio" name="answers[{{ loop.parent.index0 }}]" value="{{ loop.index0 }}"> {{ opt }}
+                        </label><br>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button type="submit">Soumettre</button>
+        </form>
+    {% endif %}
+
+    <p><a href="{{ path('quiz_index') }}">Retour aux quizzes</a></p>
+{% endblock %}

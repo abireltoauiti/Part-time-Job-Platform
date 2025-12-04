@@ -1,0 +1,27 @@
+{# templates/quiz/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Quizzes{% endblock %}
+
+{% block body %}
+    <h1>Quizzes</h1>
+
+    {% if demo %}
+        <p>Aucun quiz en base — utilisez le quiz de démonstration ci-dessous.</p>
+    {% endif %}
+
+    <ul>
+        {% for q in quizzes %}
+            <li>
+                {% if q is iterable and q.id is defined %}
+                    <a href="{{ path('quiz_show', {'id': q.id}) }}">{{ q.title }}</a>
+                {% else %}
+                    {# demo item #}
+                    <a href="{{ path('quiz_demo') }}">{{ q.title }}</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="{{ path('quiz_demo') }}">Lancer le quiz de démonstration</a></p>
+{% endblock %}

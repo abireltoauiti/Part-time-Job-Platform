@@ -1,6 +1,11 @@
 #!/usr/bin/env php
 <?php
 
+// Increase maximum execution time for local CLI executions to avoid
+// "Maximum execution time of 30 seconds exceeded" errors during
+// container compilation or other heavy boot tasks.
+ini_set('max_execution_time', '0');
+
 use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
