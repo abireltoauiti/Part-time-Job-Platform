@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Job Details{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/job-details.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card card-details shadow-lg border-0">
+                    <div class="card-header py-3">
+                        Job Details
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Id:</strong> {{ job.id }}</li>
+                            <li class="list-group-item"><strong>Titre:</strong> {{ job.titre }}</li>
+                            <li class="list-group-item"><strong>Description:</strong> {{ job.description }}</li>
+                            <li class="list-group-item"><strong>Localisation:</strong> {{ job.localisation }}</li>
+                            <li class="list-group-item"><strong>Salaire:</strong> {{ job.salaire }}</li>
+                            <li class="list-group-item"><strong>Date limite:</strong> {{ job.dateLimite|date('Y-m-d H:i') }}</li>
+                        </ul>
+
+                        <div class="mt-4 d-flex justify-content-between">
+                            <a href="{{ path('job_index') }}" class="btn btn-secondary btn-hover">Back to list</a>
+                            <div>
+                                <a href="{{ path('job_edit', {'id': job.id}) }}" class="btn btn-warning btn-hover">Edit</a>
+                                {{ include('job/_delete_form.html.twig', {'job': job, 'attr': {'class': 'delete-form d-inline'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Animation hover sur chaque élément de la liste
+            const listItems = document.querySelectorAll('.list-group-item');
+            listItems.forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    item.style.backgroundColor = '#e8f0fe';
+                });
+                item.addEventListener('mouseleave', () => {
+                    item.style.backgroundColor = '';
+                });
+            });
+
+            // Confirmation avant suppression
+            const deleteForms = document.querySelectorAll('.delete-form');
+            deleteForms.forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    if (!confirm('Are you sure you want to delete this job?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

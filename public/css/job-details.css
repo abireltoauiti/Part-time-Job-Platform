@@ -1,0 +1,69 @@
+/* job-details.css */
+
+/* Fond et police moderne */
+body {
+    background: linear-gradient(135deg, #f0f4f8, #ffffff);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Carte principale */
+.card-details {
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-top: 2rem;
+}
+
+.card-details:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+/* Header de la carte */
+.card-details .card-header {
+    background: linear-gradient(90deg, #4e73df, #224abe);
+    color: white;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+/* Liste des détails */
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid #dee2e6;
+    transition: background 0.3s;
+}
+
+.list-group-item:hover {
+    background-color: #f1f5fb;
+}
+
+/* Boutons modernes */
+.btn-hover {
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s;
+}
+
+.btn-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(78,115,223,0.3);
+}
+
+/* Footer spacing */
+footer {
+    margin-top: auto;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .card-details .card-header {
+        font-size: 1.2rem;
+    }
+}
+s

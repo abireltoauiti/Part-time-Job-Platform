@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Job{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/edit-job.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card card-edit shadow-lg rounded-lg border-0">
+                    <div class="card-header text-center py-4 bg-gradient">
+                        <h1 class="edit-job-title">Edit Job</h1>
+                    </div>
+                    <div class="card-body">
+
+                        {# Alert pour erreurs globales #}
+                        {% if not form.vars.valid %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Form errors:</strong>
+                                <ul class="mb-0">
+                                    {% for error in form.vars.errors %}
+                                        <li>{{ error.message }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endif %}
+
+                        {{ form_start(form, {'attr': {'id': 'editJobForm'}}) }}
+
+                        {% for field in ['titre', 'description', 'localisation', 'salaire', 'dateLimite'] %}
+                            <div class="mb-3">
+                                {{ form_label(attribute(form, field), attribute(form, field).vars.label|default(field|capitalize)) }}
+                                {{ form_widget(attribute(form, field), {'attr': {'class': 'form-control form-input', 'placeholder': 'Enter ' ~ field|capitalize}}) }}
+                                {{ form_errors(attribute(form, field)) }}
+                            </div>
+                        {% endfor %}
+
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <a href="{{ path('job_index') }}" class="btn btn-secondary btn-hover">Back to List</a>
+                            <button type="submit" class="btn btn-primary btn-hover" id="submitBtn">
+                                <span>Update Job</span>
+                                <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                            </button>
+                        </div>
+
+                        {{ form_end(form) }}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('editJobForm');
+            const submitBtn = document.getElementById('submitBtn');
+
+            form.addEventListener('submit', function(e) {
+                submitBtn.querySelector('span').textContent = 'Submitting...';
+                submitBtn.querySelector('.spinner-border').classList.remove('d-none');
+                submitBtn.disabled = true;
+            });
+        });
+    </script>
+{% endblock %}

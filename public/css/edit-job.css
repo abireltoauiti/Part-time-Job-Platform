@@ -1,0 +1,72 @@
+/* edit-job.css */
+
+/* Fond dégradé et font moderne */
+body {
+    background: linear-gradient(135deg, #f0f4f8, #ffffff);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Carte principale */
+.card-edit {
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card-edit:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+/* Header de la carte */
+.card-edit .card-header {
+    background: linear-gradient(90deg, #4e73df, #224abe);
+    color: white;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+/* Style du formulaire */
+.form-control {
+    border-radius: 0.5rem;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78,115,223,0.25);
+}
+
+/* Boutons modernes */
+.btn-hover {
+    border-radius: 0.5rem;
+    padding: 0.6rem 1.5rem;
+    transition: all 0.3s;
+}
+
+.btn-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(78,115,223,0.3);
+}
+
+/* Titre de la page */
+h1.edit-job-title {
+    color: #1e3a8a;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+/* Alertes pour les erreurs */
+.alert {
+    border-radius: 0.5rem;
+}
+
+/* Spinner */
+.spinner-border {
+    vertical-align: middle;
+}

@@ -32,7 +32,6 @@ class Job
     private ?\DateTimeImmutable $dateLimite = null;
 
 
-
     #[ORM\ManyToOne(inversedBy: 'jobs')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CategorieJob $categorieJob = null;
@@ -42,10 +41,6 @@ class Job
      */
     #[ORM\OneToMany(targetEntity: Candidature::class, mappedBy: 'job')]
     private Collection $candidatures;
-
-    #[ORM\ManyToOne(inversedBy: 'jobs')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $Entreprise = null;
 
     public function __construct()
     {
@@ -119,8 +114,6 @@ class Job
 
 
 
-
-
     public function getCategorieJob(): ?CategorieJob
     {
         return $this->categorieJob;
@@ -159,18 +152,6 @@ class Job
                 $candidature->setJob(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getEntreprise(): ?User
-    {
-        return $this->Entreprise;
-    }
-
-    public function setEntreprise(?User $Entreprise): static
-    {
-        $this->Entreprise = $Entreprise;
 
         return $this;
     }
