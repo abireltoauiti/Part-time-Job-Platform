@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -27,6 +29,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 100)]
     private ?string $nom = null;
+
+    /**
+     * @var Collection<int, Job>
+     */
+    #[ORM\OneToMany(targetEntity: Job::class, mappedBy: 'Entreprise', orphanRemoval: true)]
+    private Collection $jobs;
+
+    /**
+     * @var Collection<int, Candidature>
+     */
+    #[ORM\OneToMany(targetEntity: Candidature::class, mappedBy: 'Candidat')]
+    private Collection $candidatures;
+
+    public function __construct()
+    {
+        $this->jobs = new ArrayCollection();
+        $this->candidatures = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -89,6 +109,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Job>
+     */
+    public function getJobs(): Collection
+    {
+        return $this->jobs;
+    }
+
+    public function addJob(Job $job): static
+    {
+        if (!$this->jobs->contains($job)) {
+            $this->jobs->add($job);
+            $job->setEntreprise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJob(Job $job): static
+    {
+        if ($this->jobs->removeElement($job)) {
+            // set the owning side to null (unless already changed)
+            if ($job->getEntreprise() === $this) {
+                $job->setEntreprise(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Candidature>
+     */
+    public function getCandidatures(): Collection
+    {
+        return $this->candidatures;
+    }
+
+    public function addCandidature(Candidature $candidature): static
+    {
+        if (!$this->candidatures->contains($candidature)) {
+            $this->candidatures->add($candidature);
+            $candidature->setCandidat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCandidature(Candidature $candidature): static
+    {
+        if ($this->candidatures->removeElement($candidature)) {
+            // set the owning side to null (unless already changed)
+            if ($candidature->getCandidat() === $this) {
+                $candidature->setCandidat(null);
+            }
+        }
+
         return $this;
     }
 }

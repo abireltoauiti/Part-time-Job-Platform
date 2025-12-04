@@ -25,6 +25,10 @@ security:
                 # by default, the feature is enabled by checking a checkbox in the
                 # login form, uncomment the following line to always enable it.
                 #always_remember_me: true
+            logout:
+                path: /logout
+                target: /login
+
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

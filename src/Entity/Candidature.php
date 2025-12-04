@@ -26,6 +26,10 @@ class Candidature
     #[ORM\JoinColumn(nullable: false)]
     private ?job $job = null;
 
+    #[ORM\ManyToOne(inversedBy: 'candidatures')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $Candidat = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +79,18 @@ class Candidature
     public function setJob(?job $job): static
     {
         $this->job = $job;
+
+        return $this;
+    }
+
+    public function getCandidat(): ?User
+    {
+        return $this->Candidat;
+    }
+
+    public function setCandidat(?User $Candidat): static
+    {
+        $this->Candidat = $Candidat;
 
         return $this;
     }

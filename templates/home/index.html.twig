@@ -1,0 +1,68 @@
+{# templates/home/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Partly - Accueil{% endblock %}
+
+{% block body %}
+    {# ================= Header ================= #}
+    <header class="bg-white shadow-sm py-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1 class="fw-bold text-primary" style="transform: rotate(-2deg);">PARTLY</h1>
+            <a href="{{ path('app_login') }}" class="btn btn-primary">
+                S'inscrire
+            </a>
+        </div>
+    </header>
+
+    {# ================= Hero Section ================= #}
+    <section class="position-relative" style="height: 100vh; background: url('{{ asset('images/background.webp') }}') center/cover no-repeat;">
+        <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0,0,0,0.4);">
+            <div class="d-flex flex-column justify-content-center align-items-center text-center h-100 px-3">
+                <h2 class="text-white display-4 fw-bold mb-3">
+                    Partly : Le job qui <span class="text-info">s’adapte à votre rythme</span>
+                </h2>
+                <p class="text-white fs-5 mb-4">
+                    Trouvez facilement des jobs à temps partiel et boostez votre expérience professionnelle.
+                </p>
+            </div>
+        </div>
+    </section>
+    {# Après le hero section dans home/index.html.twig #}
+    <section class="py-5 bg-light">
+        <div class="container text-center">
+            <h3 class="display-5 fw-bold mb-3">
+                Vos talents, vos opportunités
+            </h3>
+            <p class="fs-5 text-secondary">
+                Que vous soyez candidat ou entreprise, Partly connecte les talents aux bonnes opportunités à temps partiel.
+            </p>
+        </div>
+    </section>
+    {# Section "Let the jobs find you" après la section candidats / entreprises #}
+    <section class="py-5 bg-white">
+
+    <div class="container">
+            <div class="row align-items-center">
+                {# Image à gauche sur desktop, en haut sur mobile #}
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <img src="{{ asset('images/hired.webp') }}" alt="Job finding" class="img-fluid rounded shadow">
+                </div>
+
+                {# Texte à droite #}
+                <div class="col-md-6" >
+                    <h3 class="display-5 fw-bold mb-3">
+                        Laissez les jobs vous trouver
+                    </h3>
+                    <p class="fs-5 text-secondary mb-4">
+                        Créez votre profil gratuit pour recevoir des invitations à des entretiens et des offres de travail adaptées à votre rythme.
+                    </p>
+                    <a href="{{ path('app_register') }}" class="btn btn-primary btn-lg">
+                        Se faire embaucher
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

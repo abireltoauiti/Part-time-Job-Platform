@@ -1,48 +1,57 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}Créer un compte{% endblock %}
 
 {% block body %}
-    <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background:#f5f7fa;">
-        <div class="card shadow p-4" style="width: 420px; border-radius: 12px;">
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh">
+        <div class="card shadow p-4" style="width: 450px; border-radius: 14px;">
 
-            <h2 class="text-center mb-4" style="font-weight:600;">Créer un compte</h2>
+            <h2 class="text-center mb-4 fw-semibold">Créer un compte</h2>
 
             {{ form_start(registrationForm) }}
 
-            <div class="mb-3">
-                {{ form_label(registrationForm.email) }}
-                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
-                {{ form_errors(registrationForm.email) }}
-            </div>
+            <!-- Email -->
+            {{ form_row(registrationForm.email, {
+                label: "Adresse Email",
+                attr: {class: "form-control"}
+            }) }}
 
-            <div class="mb-3">
-                {{ form_label(registrationForm.nom) }}
-                {{ form_widget(registrationForm.nom, {'attr': {'class': 'form-control'}}) }}
-                {{ form_errors(registrationForm.nom) }}
-            </div>
+            <!-- Nom -->
+            {{ form_row(registrationForm.nom, {
+                label: "Nom complet",
+                attr: {class: "form-control"}
+            }) }}
 
+            <!-- Type -->
             <div class="mb-3">
-                {{ form_label(registrationForm.type) }}
-                {{ form_widget(registrationForm.type, {'attr': {'class': 'form-control'}}) }}
+                <label class="form-label">Vous êtes :</label>
+                <div class="d-flex gap-2">
+                    {{ form_widget(registrationForm.type) }}
+                </div>
                 {{ form_errors(registrationForm.type) }}
             </div>
 
-            <div class="mb-3">
-                {{ form_label(registrationForm.plainPassword) }}
-                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
-                {{ form_errors(registrationForm.plainPassword) }}
-            </div>
+            <!-- Mot de passe (2 champs) -->
+            {{ form_row(registrationForm.plainPassword.first, {
+                label: "Mot de passe",
+                attr: {class: "form-control"}
+            }) }}
 
-            <button type="submit" class="btn btn-primary w-100 mt-2" style="border-radius:8px;">
+            {{ form_row(registrationForm.plainPassword.second, {
+                label: "Confirmer le mot de passe",
+                attr: {class: "form-control"}
+            }) }}
+
+            <button type="submit" class="btn btn-primary w-100 mt-3" style="border-radius:8px;">
                 S’inscrire
             </button>
 
             {{ form_end(registrationForm) }}
 
             <div class="text-center mt-3">
-                <small>Déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a></small>
+                <small>Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a></small>
             </div>
+
         </div>
     </div>
 {% endblock %}
