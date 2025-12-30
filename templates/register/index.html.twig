@@ -10,19 +10,18 @@
 
             {{ form_start(registrationForm) }}
 
-            <!-- Email -->
             {{ form_row(registrationForm.email, {
                 label: "Adresse Email",
                 attr: {class: "form-control"}
             }) }}
 
-            <!-- Nom -->
+
             {{ form_row(registrationForm.nom, {
                 label: "Nom complet",
                 attr: {class: "form-control"}
             }) }}
 
-            <!-- Type -->
+
             <div class="mb-3">
                 <label class="form-label">Vous êtes :</label>
                 <div class="d-flex gap-2">
@@ -31,7 +30,7 @@
                 {{ form_errors(registrationForm.type) }}
             </div>
 
-            <!-- Mot de passe (2 champs) -->
+
             {{ form_row(registrationForm.plainPassword.first, {
                 label: "Mot de passe",
                 attr: {class: "form-control"}

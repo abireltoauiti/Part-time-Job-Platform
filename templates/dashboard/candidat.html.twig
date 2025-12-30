@@ -3,6 +3,89 @@
 {% block title %}Dashboard Candidat{% endblock %}
 
 {% block body %}
-    <h1>{{ message }}</h1>
-    <p>Vous êtes connecté en tant que candidat.</p>
+    <div class="container my-5">
+
+        <!-- HEADER -->
+        <div class="card shadow-lg p-4 mb-4"
+             style="border-radius: 15px; background: linear-gradient(to right, #0d6efd, #6610f2); color: white;">
+            <h2>👋 Bienvenue, {{ app.user.nom }}</h2>
+            <p class="mb-0">Candidat | {{ app.user.email }}</p>
+        </div>
+
+        <!-- BIO -->
+        <div class="card shadow-sm p-4 mb-4">
+            <h5>🧑‍💼 À propos de moi</h5>
+
+            {% if app.user.bio %}
+                <p class="mt-2">{{ app.user.bio }}</p>
+
+                {# Formulaire inline pour modifier la bio #}
+                {{ form_start(formBio) }}
+                <div class="input-group mt-3">
+                    {{ form_widget(formBio.bio, {'attr': {'class': 'form-control', 'placeholder': 'Modifier votre bio...'}}) }}
+                    <button class="btn btn-primary" type="submit">Enregistrer</button>
+                </div>
+                {{ form_end(formBio) }}
+
+            {% else %}
+                {# Formulaire inline pour ajouter la bio #}
+                {{ form_start(formBio) }}
+                <div class="input-group mt-2">
+                    {{ form_widget(formBio.bio, {'attr': {'class': 'form-control', 'placeholder': 'Ajoutez une courte bio...'}}) }}
+                    <button class="btn btn-success" type="submit">Ajouter</button>
+                </div>
+                {{ form_end(formBio) }}
+            {% endif %}
+        </div>
+
+        <!-- PROFIL STATUS -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm p-3 h-100">
+                    <h6>📄 Profil</h6>
+
+                    {% if app.user.isProfileComplete %}
+                        <div class="alert alert-success mt-2 mb-0">
+                            Profil complété ✔
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning mt-2 mb-2">
+                            Profil incomplet
+                        </div>
+                        <a href="{{ path('complete_profile') }}" class="btn btn-primary btn-sm">
+                            Compléter mon profil
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm p-3 h-100">
+                    <h6>📎 CV</h6>
+
+                    {% if app.user.cv %}
+                        <p class="mb-2">CV chargé ✔</p>
+                        <a href="{{ asset('uploads/cv/' ~ app.user.cv) }}"
+                           class="btn btn-outline-success btn-sm" target="_blank">
+                            Voir mon CV
+                        </a>
+                    {% else %}
+                        <p class="text-muted">Aucun CV</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPETENCES -->
+        <div class="card shadow-sm p-4 mb-4">
+            <h5>💼 Compétences</h5>
+
+            {% if app.user.competences %}
+                <p class="mt-2">{{ app.user.competences }}</p>
+            {% else %}
+                <p class="text-muted">Aucune compétence renseignée</p>
+            {% endif %}
+        </div>
+
+    </div>
 {% endblock %}

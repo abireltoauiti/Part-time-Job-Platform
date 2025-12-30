@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Compléter mon profil{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+
+                <div class="card shadow-lg p-4"
+                     style="background: linear-gradient(to right, #f8f9fa, #e9ecef);
+                        border-radius: 15px;">
+
+                    <h2 class="mb-4 text-center">
+                        Compléter mon profil candidat
+                    </h2>
+
+                    {# Affichage des erreurs globales #}
+                    {{ form_errors(form) }}
+
+                    {# IMPORTANT : enctype pour upload + CSRF auto #}
+                    {{ form_start(form, {
+                        'attr': {
+                            'enctype': 'multipart/form-data'
+                        }
+                    }) }}
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.telephone) }}
+                            {{ form_widget(form.telephone, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.telephone) }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.adresse) }}
+                            {{ form_widget(form.adresse, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.adresse) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.competences) }}
+                        {{ form_widget(form.competences, {
+                            'attr': {
+                                'class': 'form-control',
+                                'rows': 3,
+                                'placeholder': 'Ex: PHP, Symfony, Angular, MySQL...'
+                            }
+                        }) }}
+                        {{ form_errors(form.competences) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.experience) }}
+                        {{ form_widget(form.experience, {
+                            'attr': {
+                                'class': 'form-control',
+                                'rows': 3
+                            }
+                        }) }}
+                        {{ form_errors(form.experience) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.formation) }}
+                        {{ form_widget(form.formation, {
+                            'attr': {
+                                'class': 'form-control',
+                                'rows': 2
+                            }
+                        }) }}
+                        {{ form_errors(form.formation) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.dateNaissance) }}
+                        {{ form_widget(form.dateNaissance, {
+                            'attr': {
+                                'class': 'form-control'
+                            }
+                        }) }}
+                        {{ form_errors(form.dateNaissance) }}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form_label(form.cv) }}
+                        {{ form_widget(form.cv, {
+                            'attr': {
+                                'class': 'form-control'
+                            }
+                        }) }}
+                        <small class="text-muted">
+                            Format accepté : PDF (max 2 Mo)
+                        </small>
+                        {{ form_errors(form.cv) }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        💾 Enregistrer mon profil
+                    </button>
+
+                    {{ form_end(form) }}
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

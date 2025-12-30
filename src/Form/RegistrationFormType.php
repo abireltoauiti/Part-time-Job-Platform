@@ -30,9 +30,9 @@ class RegistrationFormType extends AbstractType
                     'Candidat' => 'candidat',
                     'Entreprise' => 'entreprise',
                 ],
-                'expanded' => true, // radio buttons
+                'expanded' => true,
                 'multiple' => false,
-                'mapped' => false, // ce champ ne correspond pas directement à la propriété User
+                'mapped' => false,
             ]);
     }
 

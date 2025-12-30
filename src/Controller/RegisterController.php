@@ -24,7 +24,6 @@ final class RegisterController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Vérifier si l'email existe déjà
             $existingUser = $doctrine->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]);
             if ($existingUser) {
                 $this->addFlash('error', 'Cet email est déjà utilisé.');
@@ -35,9 +34,7 @@ final class RegisterController extends AbstractController
             $plainPassword = $form->get('plainPassword')->getData();
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
 
-            // Déterminer le rôle selon le type sélectionné
             $type = $form->get('type')->getData();
-
             switch ($type) {
                 case 'candidat':
                     $user->setRoles(['ROLE_CANDIDAT']);
@@ -49,7 +46,7 @@ final class RegisterController extends AbstractController
                     $user->setRoles(['ROLE_USER']);
             }
 
-            // Persister en base
+
             $entityManager = $doctrine->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
