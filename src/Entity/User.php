@@ -64,6 +64,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $bio = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isActive = true;
+
 
 
 
@@ -293,6 +296,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->bio = $bio;
         return $this;
     }
+
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
+
 
 
 

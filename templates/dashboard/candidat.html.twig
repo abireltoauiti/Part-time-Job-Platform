@@ -2,89 +2,266 @@
 
 {% block title %}Dashboard Candidat{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .dashboard-header {
+            background: #2c3e50;
+            color: white;
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            background: white;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 600;
+            color: #2c3e50;
+            padding: 1rem 1.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .status-complete {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .status-incomplete {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .competence-tag {
+            display: inline-block;
+            background: #e9ecef;
+            color: #495057;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #0d6efd;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #0b5ed7;
+        }
+
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #6c757d;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .info-row {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-    <div class="container my-5">
+    <div class="container my-4">
 
         <!-- HEADER -->
-        <div class="card shadow-lg p-4 mb-4"
-             style="border-radius: 15px; background: linear-gradient(to right, #0d6efd, #6610f2); color: white;">
-            <h2>👋 Bienvenue, {{ app.user.nom }}</h2>
-            <p class="mb-0">Candidat | {{ app.user.email }}</p>
+        <div class="dashboard-header mb-4">
+            <h3 class="mb-1">{{ app.user.nom }}</h3>
+            <p class="mb-0 opacity-75">{{ app.user.email }}</p>
         </div>
 
-        <!-- BIO -->
-        <div class="card shadow-sm p-4 mb-4">
-            <h5>🧑‍💼 À propos de moi</h5>
+        <div class="row">
+            <!-- COLONNE GAUCHE -->
+            <div class="col-lg-8">
 
-            {% if app.user.bio %}
-                <p class="mt-2">{{ app.user.bio }}</p>
+                <!-- BIO -->
+                <div class="card">
+                    <div class="card-header">
+                        À propos
+                    </div>
+                    <div class="card-body">
+                        {% if app.user.bio %}
+                            <p class="mb-3">{{ app.user.bio }}</p>
 
-                {# Formulaire inline pour modifier la bio #}
-                {{ form_start(formBio) }}
-                <div class="input-group mt-3">
-                    {{ form_widget(formBio.bio, {'attr': {'class': 'form-control', 'placeholder': 'Modifier votre bio...'}}) }}
-                    <button class="btn btn-primary" type="submit">Enregistrer</button>
+                            <!-- Bouton pour ouvrir le formulaire -->
+                            <button class="btn btn-outline-primary btn-sm mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#bioFormCollapse" aria-expanded="false" aria-controls="bioFormCollapse">
+                                Modifier
+                            </button>
+
+                            <!-- Formulaire collapsible -->
+                            <div class="collapse" id="bioFormCollapse">
+                                {{ form_start(formBio) }}
+                                <div class="row g-2">
+                                    <div class="col-md-12">
+                                        {{ form_widget(formBio.bio, {'attr': {'class': 'form-control', 'rows': 3}}) }}
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <button class="btn btn-primary" type="submit">Enregistrer</button>
+                                </div>
+                                {{ form_end(formBio) }}
+                            </div>
+                        {% else %}
+                            <p class="text-muted mb-3">Ajoutez une description de votre profil</p>
+
+                            {{ form_start(formBio) }}
+                            <div class="row g-2">
+                                <div class="col-md-12">
+                                    {{ form_widget(formBio.bio, {'attr': {'class': 'form-control', 'placeholder': 'Décrivez votre parcours et vos objectifs professionnels...', 'rows': 4}}) }}
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <button class="btn btn-primary" type="submit">Ajouter</button>
+                            </div>
+                            {{ form_end(formBio) }}
+                        {% endif %}
+
+                    </div>
                 </div>
-                {{ form_end(formBio) }}
 
-            {% else %}
-                {# Formulaire inline pour ajouter la bio #}
-                {{ form_start(formBio) }}
-                <div class="input-group mt-2">
-                    {{ form_widget(formBio.bio, {'attr': {'class': 'form-control', 'placeholder': 'Ajoutez une courte bio...'}}) }}
-                    <button class="btn btn-success" type="submit">Ajouter</button>
+                <!-- COMPÉTENCES -->
+                <div class="card">
+                    <div class="card-header">
+                        Compétences
+                    </div>
+                    <div class="card-body">
+                        {% if app.user.competences %}
+                            {% set competences_list = app.user.competences|split(',') %}
+                            <div class="mb-3">
+                                {% for competence in competences_list %}
+                                    <span class="competence-tag">{{ competence|trim }}</span>
+                                {% endfor %}
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary">Modifier</button>
+                        {% else %}
+                            <p class="text-muted mb-3">Aucune compétence renseignée</p>
+                            <button class="btn btn-sm btn-primary">Ajouter des compétences</button>
+                        {% endif %}
+                    </div>
                 </div>
-                {{ form_end(formBio) }}
-            {% endif %}
-        </div>
 
-        <!-- PROFIL STATUS -->
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="card shadow-sm p-3 h-100">
-                    <h6>📄 Profil</h6>
-
-                    {% if app.user.isProfileComplete %}
-                        <div class="alert alert-success mt-2 mb-0">
-                            Profil complété ✔
-                        </div>
-                    {% else %}
-                        <div class="alert alert-warning mt-2 mb-2">
-                            Profil incomplet
-                        </div>
-                        <a href="{{ path('complete_profile') }}" class="btn btn-primary btn-sm">
-                            Compléter mon profil
-                        </a>
-                    {% endif %}
-                </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="card shadow-sm p-3 h-100">
-                    <h6>📎 CV</h6>
+            <!-- COLONNE DROITE -->
+            <div class="col-lg-4">
 
-                    {% if app.user.cv %}
-                        <p class="mb-2">CV chargé ✔</p>
-                        <a href="{{ asset('uploads/cv/' ~ app.user.cv) }}"
-                           class="btn btn-outline-success btn-sm" target="_blank">
-                            Voir mon CV
-                        </a>
-                    {% else %}
-                        <p class="text-muted">Aucun CV</p>
-                    {% endif %}
+                <!-- STATUT PROFIL -->
+                <div class="card">
+                    <div class="card-header">
+                        Statut du profil
+                    </div>
+                    <div class="card-body">
+                        <div class="info-row">
+                            <div class="section-title">Profil</div>
+                            {% if app.user.isProfileComplete %}
+                                <div class="status-complete">
+                                    ✓ Complet
+                                </div>
+                            {% else %}
+                                <div class="status-incomplete">
+                                    ✗ Incomplet
+                                </div>
+                                <a href="{{ path('complete_profile') }}" class="btn btn-primary btn-sm mt-2">
+                                    Compléter
+                                </a>
+                            {% endif %}
+                        </div>
+
+                        <div class="info-row">
+                            <div class="section-title">CV</div>
+                            {% if app.user.cv %}
+                                <div class="status-complete mb-2">
+                                    ✓ CV téléchargé
+                                </div>
+                                <a href="{{ asset('uploads/cv/' ~ app.user.cv) }}"
+                                   class="btn btn-outline-primary btn-sm" target="_blank">
+                                    Voir le CV
+                                </a>
+                            {% else %}
+                                <div class="status-incomplete mb-2">
+                                    ✗ Aucun CV
+                                </div>
+                                <button class="btn btn-primary btn-sm">
+                                    Télécharger
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
+
+                <!-- INFORMATIONS -->
+                <div class="card">
+                    <div class="card-header">
+                        Informations
+                    </div>
+                    <div class="card-body">
+
+                        <div class="info-row">
+                            <div class="info-label">Type de compte</div>
+                            <div class="info-value">Candidat</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Statut</div>
+                            <div class="info-value">
+                                <span class="badge bg-success">Actif</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTIONS RAPIDES -->
+                <div class="card">
+                    <div class="card-header">
+                        Actions rapides
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="#" class="btn btn-outline-primary">Rechercher des offres</a>
+                            <a href="#" class="btn btn-outline-secondary">Mes candidatures</a>
+                            <a href="#" class="btn btn-outline-secondary">Paramètres</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
-
-        <!-- COMPETENCES -->
-        <div class="card shadow-sm p-4 mb-4">
-            <h5>💼 Compétences</h5>
-
-            {% if app.user.competences %}
-                <p class="mt-2">{{ app.user.competences }}</p>
-            {% else %}
-                <p class="text-muted">Aucune compétence renseignée</p>
-            {% endif %}
         </div>
 
     </div>

@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Form\BioType;
+use App\Entity\User;
+
 
 class DashboardController extends AbstractController
 {
@@ -61,13 +63,13 @@ class DashboardController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function listUsers(UserRepository $userRepository): Response
     {
-        // Récupérer tous les utilisateurs
-        $users = $userRepository->findAll();
+        $users = $userRepository->findCandidatesAndCompanies();
 
         return $this->render('dashboard/admin_users.html.twig', [
             'users' => $users
         ]);
     }
+
     #[Route('/candidat/profil', name: 'complete_profile')]
     #[IsGranted('ROLE_CANDIDAT')]
     public function completeProfile(
@@ -115,5 +117,49 @@ class DashboardController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('/admin/user/{id}/toggle', name: 'admin_toggle_user')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function toggleUser(User $user, EntityManagerInterface $em): Response
+    {
+        // Utilise isActive() pour lire la valeur
+        $user->setIsActive(!$user->isActive()); // inverse l'état
+        $em->flush();
+
+        $this->addFlash('success', 'Statut utilisateur mis à jour !');
+
+        return $this->redirectToRoute('admin_users');
+    }
+
+    #[Route('/admin/user/{id}', name: 'admin_user_profile')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function viewUserProfile(User $user): Response
+    {
+        return $this->render('dashboard/admin_user_profile.html.twig', [
+            'user' => $user
+        ]);
+    }
+
+    #[Route('/admin/user/{id}/delete', name: 'admin_delete_user', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function deleteUser(User $user, EntityManagerInterface $em, Request $request): Response
+    {
+        // Vérification CSRF
+        $submittedToken = $request->request->get('_token');
+        if ($this->isCsrfTokenValid('delete-user'.$user->getId(), $submittedToken)) {
+            $em->remove($user);
+            $em->flush();
+
+            $this->addFlash('success', 'Utilisateur supprimé avec succès !');
+        } else {
+            $this->addFlash('danger', 'Jeton CSRF invalide, suppression annulée.');
+        }
+
+        return $this->redirectToRoute('admin_users');
+    }
+
+
+
+
 
 }

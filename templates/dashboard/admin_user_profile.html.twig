@@ -1,0 +1,73 @@
+{% extends 'dashboard/admin.html.twig' %}
+
+{% block title %}Profil de {{ user.nom }}{% endblock %}
+
+{% block body %}
+    <div class="container my-4">
+        <h1 class="mb-4">Profil de {{ user.nom }}</h1>
+
+        {# Informations personnelles #}
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-person-circle me-2"></i>Informations personnelles
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <strong>Email:</strong> {{ user.email }}
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <strong>Téléphone:</strong> {{ user.telephone|default('Non renseigné') }}
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <strong>Adresse:</strong> {{ user.adresse|default('Non renseignée') }}
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <strong>Date de naissance:</strong>
+                        {{ user.dateNaissance ? user.dateNaissance|date('d/m/Y') : 'Non renseignée' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Profil professionnel #}
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <i class="bi bi-briefcase me-2"></i>Profil professionnel
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Bio:</strong>
+                    <p class="mt-1">{{ user.bio|default('Non renseignée') }}</p>
+                </div>
+                <div class="mb-3">
+                    <strong>Compétences:</strong>
+                    <p class="mt-1">{{ user.competences|default('Non renseignées') }}</p>
+                </div>
+                <div class="mb-3">
+                    <strong>Expériences:</strong>
+                    <p class="mt-1">{{ user.experience|default('Non renseignées') }}</p>
+                </div>
+                <div class="mb-3">
+                    <strong>Formation:</strong>
+                    <p class="mt-1">{{ user.formation|default('Non renseignée') }}</p>
+                </div>
+                <div>
+                    <strong>CV:</strong>
+                    {% if user.cv %}
+                        <a href="{{ asset('uploads/cv/' ~ user.cv) }}" target="_blank"
+                           class="btn btn-sm btn-success ms-2">
+                            <i class="bi bi-file-earmark-pdf me-1"></i>Voir le CV
+                        </a>
+                    {% else %}
+                        <span class="text-muted ms-2">Aucun CV disponible</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <a href="{{ path('admin_users') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Retour à la liste
+        </a>
+    </div>
+{% endblock %}
