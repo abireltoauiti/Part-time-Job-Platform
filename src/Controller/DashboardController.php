@@ -14,6 +14,11 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Form\BioType;
 use App\Entity\User;
+use App\Entity\Message;
+use App\Form\MessageType;
+use App\Repository\MessageRepository;
+
+
 
 
 class DashboardController extends AbstractController
@@ -157,6 +162,49 @@ class DashboardController extends AbstractController
 
         return $this->redirectToRoute('admin_users');
     }
+
+    // Envoyer un message
+    #[Route('/admin/message/send', name: 'admin_send_message')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function sendMessage(Request $request, EntityManagerInterface $em): Response
+    {
+        $message = new Message();
+        $message->setSender($this->getUser());
+
+        $form = $this->createForm(MessageType::class, $message);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($message);
+            $em->flush();
+            $this->addFlash('success', 'Message envoyé !');
+            return $this->redirectToRoute('admin_send_message');
+        }
+
+        return $this->render('dashboard/admin_send_message.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+// Inbox / Historique
+    #[Route('/admin/message/inbox', name: 'admin_inbox')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function inbox(MessageRepository $messageRepository): Response
+    {
+        // Récupère tous les messages envoyés par l'admin, triés par date
+        $messages = $messageRepository->createQueryBuilder('m')
+            ->where('m.sender = :admin')
+            ->setParameter('admin', $this->getUser())
+            ->orderBy('m.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('dashboard/admin_inbox.html.twig', [
+            'messages' => $messages,
+        ]);
+    }
+
+
 
 
 

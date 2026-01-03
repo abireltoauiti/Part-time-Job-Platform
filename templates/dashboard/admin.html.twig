@@ -15,13 +15,30 @@
 <body>
 <div class="sidebar">
     <h4 class="p-3">Admin Panel</h4>
+
     <a href="{{ path('admin_users') }}">Utilisateurs</a>
     <a href="#">Jobs</a>
+
+    <a class="d-flex justify-content-between align-items-center"
+       data-bs-toggle="collapse" href="#messagerieSubmenu" role="button" aria-expanded="false" aria-controls="messagerieSubmenu">
+        Messagerie
+        <span class="bi bi-chevron-down"></span> {# Optionnel : icône flèche #}
+    </a>
+    <div class="collapse" id="messagerieSubmenu">
+        <a class="ps-4 py-2 d-block" href="{{ path('admin_send_message') }}">Envoyer un message</a>
+        <a class="ps-4 py-2 d-block" href="{{ path('admin_inbox') }}">Inbox / Historique</a>
+    </div>
+
+
+
     <a href="#">Statistiques</a>
     <a href="#">Paramètres</a>
 </div>
+
 <div class="content">
     {% block body %}{% endblock %}
 </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </html>

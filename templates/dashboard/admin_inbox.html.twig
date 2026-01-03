@@ -1,0 +1,43 @@
+{% extends 'dashboard/admin.html.twig' %}
+
+{% block title %}Inbox / Historique{% endblock %}
+
+{% block body %}
+<h1>Inbox / Historique des messages</h1>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Destinataire</th>
+            <th>Sujet</th>
+            <th>Contenu</th>
+            <th>Lu ?</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for message in messages %}
+        <tr>
+            <td>{{ message.id }}</td>
+            <td>{{ message.recipient.nom }} ({{ message.recipient.email }})</td>
+            <td>{{ message.subject }}</td>
+            <td style="max-width: 300px; word-wrap: break-word;">{{ message.content }}</td>
+            <td>
+                {% if not message.isRead %}
+                    <span class="badge bg-danger">Nouveau</span>
+                {% else %}
+                    ✅
+                {% endif %}
+            </td>
+            <td>{{ message.createdAt ? message.createdAt|date('d/m/Y H:i') : '' }}</td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="6" class="text-center">Aucun message</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+{% endblock %}

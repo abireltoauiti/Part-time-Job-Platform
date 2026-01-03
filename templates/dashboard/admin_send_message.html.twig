@@ -1,0 +1,165 @@
+{# templates/dashboard/admin_send_message.html.twig #}
+{% extends 'dashboard/admin.html.twig' %}
+
+{% block title %}Envoyer un message{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .message-form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #d0d5dd;
+            padding: 12px 16px;
+            transition: all 0.2s;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #0a66c2;
+            box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
+        }
+        .char-counter {
+            font-size: 0.875rem;
+            color: #666;
+            text-align: right;
+            margin-top: 4px;
+        }
+        .btn-send {
+            background: #0a66c2;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 24px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-send:hover {
+            background: #004182;
+            transform: translateY(-1px);
+        }
+        .card {
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 12px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container my-4">
+        <div class="message-form-container">
+            {# Header #}
+            <div class="mb-4">
+                <h1 class="h3 mb-2">Nouveau message</h1>
+                <p class="text-muted">Envoyez un message direct à un utilisateur</p>
+            </div>
+
+            {# Flash messages #}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        <div class="d-flex align-items-center">
+                            {% if label == 'success' %}
+                                <svg width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                            {% endif %}
+                            <span>{{ message }}</span>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            {# Form #}
+            <div class="card">
+                <div class="card-body p-4">
+                    {{ form_start(form) }}
+
+                    {# Destinataire #}
+                    <div class="mb-4">
+                        {{ form_label(form.recipient, 'Destinataire', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.recipient, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_errors(form.recipient) }}
+                        <small class="text-muted d-block mt-1">
+                            Sélectionnez le destinataire de votre message
+                        </small>
+                    </div>
+
+                    {# Sujet #}
+                    <div class="mb-4">
+                        {{ form_label(form.subject, 'Objet', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.subject, {
+                            'attr': {
+                                'class': 'form-control',
+                                'placeholder': 'Ex: Demande d\'information',
+                                'maxlength': '100'
+                            }
+                        }) }}
+                        {{ form_errors(form.subject) }}
+                        <small class="text-muted d-block mt-1">
+                            Maximum 100 caractères
+                        </small>
+                    </div>
+
+                    {# Message #}
+                    <div class="mb-4">
+                        {{ form_label(form.content, 'Message', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.content, {
+                            'attr': {
+                                'class': 'form-control',
+                                'rows': 8,
+                                'placeholder': 'Rédigez votre message ici...',
+                                'maxlength': '2000',
+                                'id': 'message-content'
+                            }
+                        }) }}
+                        {{ form_errors(form.content) }}
+                        <div class="char-counter">
+                            <span id="char-count">0</span> / 2000 caractères
+                        </div>
+                    </div>
+
+                    {# Actions #}
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <a href="{{ path('admin_users') }}" class="btn btn-link text-muted text-decoration-none">
+                            Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-send">
+                            <svg width="16" height="16" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
+                            </svg>
+                            Envoyer le message
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Character counter script #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('message-content');
+            const charCount = document.getElementById('char-count');
+
+            if (textarea && charCount) {
+                // Initial count
+                charCount.textContent = textarea.value.length;
+
+                // Update on input
+                textarea.addEventListener('input', function() {
+                    charCount.textContent = this.value.length;
+                });
+            }
+        });
+    </script>
+{% endblock %}
