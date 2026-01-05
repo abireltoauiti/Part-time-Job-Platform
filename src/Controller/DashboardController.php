@@ -25,11 +25,13 @@ class DashboardController extends AbstractController
 {
     #[Route('/candidat/dashboard', name: 'candidat_dashboard')]
     #[IsGranted('ROLE_CANDIDAT')]
-    public function candidat(Request $request, EntityManagerInterface $em): Response
+    #[Route('/candidat/dashboard', name: 'candidat_dashboard')]
+    #[IsGranted('ROLE_CANDIDAT')]
+    public function candidat(Request $request, EntityManagerInterface $em, MessageRepository $messageRepository): Response
     {
         $user = $this->getUser();
 
-        // Création du formulaire de bio
+        // Formulaire Bio
         $form = $this->createForm(BioType::class, $user);
         $form->handleRequest($request);
 
@@ -41,11 +43,18 @@ class DashboardController extends AbstractController
             return $this->redirectToRoute('candidat_dashboard');
         }
 
+        // Récupération des messages
+        $unreadMessages = $messageRepository->findUnreadByRecipient($user); // messages non lus
+        $allMessages = $messageRepository->findBy(['recipient' => $user], ['createdAt' => 'DESC']); // tous les messages
+
+        // Rendu du template avec toutes les variables
         return $this->render('dashboard/candidat.html.twig', [
-            'message' => 'Bienvenue Candidat !',
-            'formBio' => $form->createView(), // On passe le formulaire au template
+            'formBio' => $form->createView(),       // formulaire Bio
+            'unreadMessages' => $unreadMessages,    // messages non lus
+            'allMessages' => $allMessages,          // tous les messages
         ]);
     }
+
 
     #[Route('/entreprise/dashboard', name: 'entreprise_dashboard')]
     #[IsGranted('ROLE_ENTREPRISE')]
@@ -204,7 +213,27 @@ class DashboardController extends AbstractController
         ]);
     }
 
+    #[Route('/candidat/message/read/{id}', name: 'candidat_message_read', methods: ['POST'])]
+    #[IsGranted('ROLE_CANDIDAT')]
+    public function markMessageAsRead(Message $message, EntityManagerInterface $em, Request $request): JsonResponse
+    {
+        // Vérifier le CSRF token
+        $submittedToken = $request->headers->get('X-CSRF-TOKEN');
+        if (!$this->isCsrfTokenValid('read_message', $submittedToken)) {
+            return $this->json(['error' => 'Token invalide'], 400);
+        }
 
+        // Vérifier que le message appartient bien à l'utilisateur
+        if ($message->getRecipient() !== $this->getUser()) {
+            return $this->json(['error' => 'Accès refusé'], 403);
+        }
+
+        // Marquer comme lu
+        $message->setIsRead(true);
+        $em->flush();
+
+        return $this->json(['success' => true]);
+    }
 
 
 

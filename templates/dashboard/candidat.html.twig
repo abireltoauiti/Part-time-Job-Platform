@@ -246,6 +246,45 @@
                         </div>
                     </div>
                 </div>
+                <!-- MESSAGES REÇUS -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        Messages reçus (<span id="unreadCount">{{ unreadMessages|length }}</span> non lus)
+                    </div>
+
+                    <div class="card-body" style="max-height: 250px; overflow-y: auto;">
+                        {% if allMessages is not empty %}
+                            <ul class="list-group list-group-flush">
+                                {% for msg in allMessages %}
+                                    <li class="list-group-item {% if not msg.isRead %}fw-bold{% endif %}">
+                                        <div class="message-item"
+                                             data-message-id="{{ msg.id }}"
+                                             data-is-read="{{ msg.isRead ? 'true' : 'false' }}"
+                                             data-csrf="{{ csrf_token('read_message') }}"
+                                             style="cursor: pointer;">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span>{{ msg.sender.nom }} : {{ msg.subject }}</span>
+                                                {% if not msg.isRead %}
+                                                    <span class="badge bg-primary rounded-pill message-badge">Nouveau</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger rounded-pill message-badge">Lu</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="message-content collapse mt-2">
+                                                <p>{{ msg.content }}</p>
+                                                <small class="text-muted">Envoyé le {{ msg.createdAt|date('d/m/Y H:i') }}</small>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted mb-0">Aucun message reçu</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+
 
                 <!-- ACTIONS RAPIDES -->
                 <div class="card">
@@ -265,4 +304,77 @@
         </div>
 
     </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.querySelectorAll('.message-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const content = this.querySelector('.message-content');
+                const isRead = this.dataset.isRead === 'true';
+                const messageId = this.dataset.messageId;
+                const csrfToken = this.dataset.csrf;
+
+                // Toggle le contenu du message
+                if(content) {
+                    content.classList.toggle('show');
+                }
+
+                // Si le message n'est pas encore lu
+                if(!isRead) {
+                    console.log('Message non lu détecté, ID:', messageId);
+
+                    // Marquer comme lu visuellement
+                    this.dataset.isRead = 'true';
+
+                    // Retirer le gras du parent li
+                    const listItem = this.closest('li');
+                    if(listItem) {
+                        listItem.classList.remove('fw-bold');
+                    }
+
+                    // Changer le badge de "Nouveau" à "Lu"
+                    const badge = this.querySelector('.message-badge');
+                    if(badge) {
+                        badge.textContent = 'Lu';
+                        badge.classList.remove('bg-primary');
+                        badge.classList.add('bg-danger');
+                    }
+
+                    // Décrémenter le compteur
+                    const counter = document.getElementById('unreadCount');
+                    if(counter) {
+                        let count = parseInt(counter.textContent);
+                        if(count > 0) {
+                            counter.textContent = count - 1;
+                        }
+                    }
+
+                    // Appel AJAX pour marquer comme lu côté serveur
+                    fetch('/candidat/message/read/' + messageId, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        }
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data.success) {
+                                console.log('Message marqué comme lu avec succès');
+                            } else {
+                                console.error('Erreur:', data.error);
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Erreur AJAX:', err);
+                        });
+                }
+            });
+        });
+    </script>
 {% endblock %}
